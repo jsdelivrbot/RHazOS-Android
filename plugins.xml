@@ -7,12 +7,8 @@
         
         <item>
             <title>Test (v1.0)</title>
-            <description><![CDATA[
-                Test plugin.
-                <br>
-                Command: test
-               ]]></description>
-            <link>https://github.com/RHazDev/RHazOS-Android/blob/master/plugins/testplugin-1.0.jar?raw=true</link>
+            <description><![CDATA[Test plugin.<br>Command: test]]></description>
+            <link>https://github.com/RHazDev/RHazOS-Android/raw/master/plugins/testplugin-1.0.jar</link>
         </item>
     </channel>
 </rss>
