@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">RHazOS</string>
+    <string name="about">
+        RHazOS is an Android console with Java plugins.\n
+        \n
+        This application is developed by RHaz Development.\n
+        \n
+        Please be aware of plugins you install, malicious plugins could take control of your phone.\n
+        \n
+        RHaz Development is not responsible for what is done with this application.\n
+    </string>
+    <string name="title_activity_console">Console</string>
+    <string name="title_activity_plugins">Plugins</string>
+    <string name="title_activity_about">About</string>
+    <string name="console_service">RHazOS</string>
+</resources>

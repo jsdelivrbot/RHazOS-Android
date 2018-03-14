@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="fr.rhaz.os.android">
+
+    <uses-sdk
+        android:minSdkVersion="23"
+        android:targetSdkVersion="23" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".Menu">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:label="@string/title_activity_console" android:name="fr.rhaz.os.android.ConsoleActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".Menu" />
+        </activity>
+        <activity android:label="@string/title_activity_plugins" android:name="fr.rhaz.os.android.plugins.PluginsActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".Menu" />
+        </activity>
+        <activity android:label="@string/title_activity_about" android:name="fr.rhaz.os.android.AboutActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".Menu" />
+        </activity>
+        <service android:label="@string/console_service" android:icon="@mipmap/ic_launcher" android:name="fr.rhaz.os.android.ConsoleService" />
+        <receiver android:name="fr.rhaz.os.android.ConsoleService$NotificationReceiver">
+            <intent-filter android:priority="999">
+                <action android:name="com.example.cancel" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>

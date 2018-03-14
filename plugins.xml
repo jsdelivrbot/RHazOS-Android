@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+    <channel>
+        <title>RHaz OS Plugins</title>
+        <link>https://github.com/RHazDev/RHazOS</link>
+        <description>Official plugins repository for RHaz OS</description>
+        
+        <item>
+            <title>HGC (v1.1)</title>
+            <description><![CDATA[Gives commands for <a href=https://apithis.net/>https://apithis.net/</a> by HGCommunity]]></description>
+            <link>https://github.com/RHazDev/RHazOS/blob/master/plugins/hgc-1.1-dx.jar?raw=true</link>
+        </item>
+        
+        <item>
+            <title>Socket4OS (v2.0)</title>
+            <description><![CDATA[SocketAPI client <a href=https://github.com/RHazDev/SocketAPI>https://github.com/RHazDev/SocketAPII</a>]]></description>
+            <link>https://github.com/RHazDev/RHazOS/blob/master/plugins/socketos-2.0-dx.jar?raw=true</link>
+        </item>
+    </channel>
+</rss>
