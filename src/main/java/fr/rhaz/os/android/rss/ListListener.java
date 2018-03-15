@@ -127,7 +127,7 @@ public class ListListener implements AdapterView.OnItemClickListener {
                 // might be -1: server did not report the length
                 int fileLength = connection.getContentLength();
 
-                File d = new File(Environment.getExternalStorageDirectory(), "RHazOS");
+                File d = new File(Environment.getExternalStorageDirectory(), "RHazOS/plugins");
                 if(!d.exists()) d.mkdir();
                 File f = new File(d, sUrl[0].substring(sUrl[0].lastIndexOf('/')+1));
                 if(!f.exists()) f.createNewFile();

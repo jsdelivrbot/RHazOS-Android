@@ -89,7 +89,7 @@ public class ConsoleService extends Service {
             Class<? extends Plugin> pluginclass = Class.forName(main, true, loader).asSubclass(Plugin.class);
             desc.setPluginClass(pluginclass);
 
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
