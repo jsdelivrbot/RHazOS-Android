@@ -12,12 +12,14 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat.Action;
 import android.support.v7.app.NotificationCompat.Builder;
+import android.util.Log;
 
 import java.io.File;
 import java.util.function.BiConsumer;
 
 import dalvik.system.DexClassLoader;
 import fr.rhaz.os.OS;
+import fr.rhaz.os.OS.OSEnvironment;
 import fr.rhaz.os.plugins.Plugin;
 import fr.rhaz.os.plugins.PluginDescription;
 
@@ -71,21 +73,26 @@ public class ConsoleService extends Service {
             if (this.os.getThread().isAlive())
                 this.os.exit();
 
-        this.os = new OS();
+        this.os = new OS(OSEnvironment.ANDROID);
 
         os.getConsole().getLogger().getOutputs().add(output);
 
+        Log.w("RHazOS", "Loading plugins 1");
         BiConsumer<PluginDescription, String> loader = (desc, main) -> injectDexClass(desc, main);
         os.getPluginManager().setFolder(new File(Environment.getExternalStorageDirectory(), "RHazOS/plugins"));
+        Log.w("RHazOS", "Loading plugins 2");
         os.getPluginManager().loadAll(loader);
+        Log.w("RHazOS", "Loaded plugins");
         os.getPluginManager().enableAll();
+        Log.w("RHazOS", "Enabled plugins");
         os.started();
     }
 
     public void injectDexClass(PluginDescription desc, String main){
         try {
 
-            DexClassLoader loader = new DexClassLoader(desc.getFile().getPath(), getFilesDir().getPath(), null, getClass().getClassLoader());
+            DexClassLoader loader = new DexClassLoader(desc.getFile().getAbsolutePath(), getFilesDir().getAbsolutePath(), null, ClassLoader.getSystemClassLoader());
+            loader.loadClass(main);
             Class<? extends Plugin> pluginclass = Class.forName(main, true, loader).asSubclass(Plugin.class);
             desc.setPluginClass(pluginclass);
 
@@ -109,7 +116,7 @@ public class ConsoleService extends Service {
 
     public class NotificationReceiver extends BroadcastReceiver {
         public void onReceive(Context context, Intent intent) {
-            System.exit(0);
+
         }
     }
 }

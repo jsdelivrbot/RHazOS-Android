@@ -6,9 +6,14 @@
         <description>Official plugins repository for RHaz OS</description>
         
         <item>
-            <title>Test (v1.0)</title>
+            <title>Test Android (v1.0)</title>
             <description><![CDATA[Test plugin.<br>Command: test]]></description>
             <link>https://rawgit.com/RHazDev/RHazOS-Android/master/plugins/testplugin-1.0-dx.jar</link>
+        </item>
+        <item>
+            <title>Test (v1.0)</title>
+            <description><![CDATA[Test plugin.<br>Command: test]]></description>
+            <link>https://rawgit.com/RHazDev/RHazOS-Android/master/plugins/testplugin-1.0.jar</link>
         </item>
     </channel>
 </rss>
