@@ -52,7 +52,7 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         View v = inflater.inflate(R.layout.first_layout, container, false);
 
         setServiceConnection();
-
+        plugins = new HashMap<>();
         listview = (ListView) v.findViewById(R.id.list);
         swipe = (SwipeRefreshLayout) v.findViewById(R.id.swipe);
         swipe.setOnRefreshListener(this);

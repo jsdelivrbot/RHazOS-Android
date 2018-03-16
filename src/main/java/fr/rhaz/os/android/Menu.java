@@ -23,6 +23,9 @@ public class Menu extends AppCompatActivity {
         ActivityCompat.requestPermissions(this, new String[]{"android.permission.READ_EXTERNAL_STORAGE"}, 1);
         ActivityCompat.requestPermissions(this, new String[]{"android.permission.WRITE_EXTERNAL_STORAGE"}, 2);
 
+        if (!Utils.isServiceRunning(this, ConsoleService.class))
+            startService(intent(ConsoleService.class));
+
         findViewById(R.id.startbutton).setOnClickListener(v -> startActivity(intent(ConsoleActivity.class)));
         findViewById(R.id.pluginsbutton).setOnClickListener(v -> startActivity(intent(PluginsActivity.class)));
         findViewById(R.id.optionsbutton).setOnClickListener(v -> Utils.openFolder(Menu.this, new File(Environment.getExternalStorageDirectory(), "RHazOS")));

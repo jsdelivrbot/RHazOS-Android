@@ -2,18 +2,13 @@
 <rss version="2.0">
     <channel>
         <title>RHaz OS Plugins</title>
-        <link>https://github.com/RHazDev/RHazOS</link>
-        <description>Official plugins repository for RHaz OS</description>
+        <link>https://github.com/RHazDev/RHazOS-Android</link>
+        <description>Official Android plugins repository for RHazOS</description>
         
         <item>
-            <title>Test Android (v1.0)</title>
+            <title>TestPlugin (v1.0)</title>
             <description><![CDATA[Test plugin.<br>Command: test]]></description>
             <link>https://rawgit.com/RHazDev/RHazOS-Android/master/plugins/testplugin-1.0-dx.jar</link>
-        </item>
-        <item>
-            <title>Test (v1.0)</title>
-            <description><![CDATA[Test plugin.<br>Command: test]]></description>
-            <link>https://rawgit.com/RHazDev/RHazOS-Android/master/plugins/testplugin-1.0.jar</link>
         </item>
     </channel>
 </rss>

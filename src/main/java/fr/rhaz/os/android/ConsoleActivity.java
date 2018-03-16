@@ -80,7 +80,7 @@ public class ConsoleActivity extends AppCompatActivity {
 
             public void onServiceConnected(ComponentName name, IBinder ibinder) {
                 service = ((ConsoleBinder) ibinder).getService();
-                service.start();
+                startService(new Intent(ConsoleActivity.this, ConsoleService.class));
             }
 
             public void onServiceDisconnected(ComponentName name) {

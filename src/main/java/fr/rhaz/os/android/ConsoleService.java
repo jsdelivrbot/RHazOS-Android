@@ -18,15 +18,15 @@ import java.io.File;
 import java.util.function.BiConsumer;
 
 import dalvik.system.DexClassLoader;
-import fr.rhaz.os.OS;
+import fr.rhaz.os.*;
 import fr.rhaz.os.OS.OSEnvironment;
 import fr.rhaz.os.plugins.Plugin;
 import fr.rhaz.os.plugins.PluginDescription;
 
-
 public class ConsoleService extends Service {
     private OS os;
     private BigStringOutput output;
+    private Notification note;
 
     public class ConsoleBinder extends Binder {
         public ConsoleService getService() {
@@ -34,8 +34,8 @@ public class ConsoleService extends Service {
         }
     }
 
-    public int onStartCommand(Intent intent, int flags, int startId) {
-
+    @Override
+    public void onCreate(){
         Intent iopen = new Intent(this, ConsoleActivity.class);
         iopen.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP + Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
@@ -46,7 +46,7 @@ public class ConsoleService extends Service {
                 pending(istop)
         );
 
-        Notification note = new Builder(this)
+        note = new Builder(this)
                 .setSmallIcon(R.drawable.notification)
                 .setContentTitle("RHaz OS")
                 .setContentIntent(pending(iopen))
@@ -55,9 +55,18 @@ public class ConsoleService extends Service {
                 .build();
 
         note.flags |= Notification.FLAG_NO_CLEAR;
-        startForeground(1337, note);
 
         this.output = new BigStringOutput();
+    }
+
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        if(intent.getAction() != null && intent.getAction().equals("stop")){
+            this.stopSelf();
+            return START_NOT_STICKY;
+        }
+
+        startForeground(1337, note);
         start();
 
         return Service.START_NOT_STICKY;
@@ -68,31 +77,42 @@ public class ConsoleService extends Service {
     }
 
     public void start() {
+        try {
 
-        if(this.os != null)
-            if (this.os.getThread().isAlive())
-                this.os.exit();
+            if(this.os != null)
+                if (this.os.getThread().isAlive())
+                    return;
 
-        this.os = new OS(OSEnvironment.ANDROID);
 
-        os.getConsole().getLogger().getOutputs().add(output);
+            this.os = new OS(OSEnvironment.ANDROID);
 
-        Log.w("RHazOS", "Loading plugins 1");
-        BiConsumer<PluginDescription, String> loader = (desc, main) -> injectDexClass(desc, main);
-        os.getPluginManager().setFolder(new File(Environment.getExternalStorageDirectory(), "RHazOS/plugins"));
-        Log.w("RHazOS", "Loading plugins 2");
-        os.getPluginManager().loadAll(loader);
-        Log.w("RHazOS", "Loaded plugins");
-        os.getPluginManager().enableAll();
-        Log.w("RHazOS", "Enabled plugins");
-        os.started();
+            os.getConsole().defaultStart();
+            os.getConsole().getLogger().getOutputs().add(output);
+
+            BiConsumer<PluginDescription, String> loader = (desc, main) -> injectDexClass(desc, main);
+
+            os.getPluginManager().setFolder(new File(Environment.getExternalStorageDirectory(), "RHazOS/plugins"));
+
+
+
+            os.getPluginManager().loadAll(loader);
+            Log.w("RHazOS", "Loaded plugins");
+
+            Thread.sleep(1000);
+
+            os.getPluginManager().enableAll();
+            Log.w("RHazOS", "Enabled plugins");
+
+            os.started();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void injectDexClass(PluginDescription desc, String main){
         try {
 
-            DexClassLoader loader = new DexClassLoader(desc.getFile().getAbsolutePath(), getFilesDir().getAbsolutePath(), null, ClassLoader.getSystemClassLoader());
-            loader.loadClass(main);
+            DexClassLoader loader = new DexClassLoader(desc.getFile().getPath(), getFilesDir().getPath(), null, this.getClassLoader());
             Class<? extends Plugin> pluginclass = Class.forName(main, true, loader).asSubclass(Plugin.class);
             desc.setPluginClass(pluginclass);
 
@@ -114,9 +134,11 @@ public class ConsoleService extends Service {
         return new ConsoleBinder();
     }
 
-    public class NotificationReceiver extends BroadcastReceiver {
+    public static class NotificationReceiver extends BroadcastReceiver {
         public void onReceive(Context context, Intent intent) {
-
+            Intent i = new Intent(context, ConsoleService.class);
+            i.setAction("stop");
+            context.startService(i);
         }
     }
 }
