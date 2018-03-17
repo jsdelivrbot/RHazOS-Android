@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0">
     <channel>
-        <title>RHaz OS Plugins</title>
+        <title>RHazOS Android Plugins</title>
         <link>https://github.com/RHazDev/RHazOS-Android</link>
-        <description>Official Android plugins repository for RHazOS</description>
+        <description>Official plugins for RHazOS-Android</description>
         
         <item>
             <title>TestPlugin (v1.0)</title>

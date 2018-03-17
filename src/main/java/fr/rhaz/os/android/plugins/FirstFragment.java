@@ -140,7 +140,7 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
             public void onServiceConnected(ComponentName name, IBinder ibinder) {
                 service = ((ConsoleBinder) ibinder).getService();
-                service.start();
+                FirstFragment.this.getContext().startService(new Intent(FirstFragment.this.getContext(), ConsoleService.class));
             }
 
             public void onServiceDisconnected(ComponentName name) {

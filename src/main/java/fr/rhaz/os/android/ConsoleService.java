@@ -15,11 +15,11 @@ import android.support.v7.app.NotificationCompat.Builder;
 import android.util.Log;
 
 import java.io.File;
-import java.util.function.BiConsumer;
 
 import dalvik.system.DexClassLoader;
 import fr.rhaz.os.*;
 import fr.rhaz.os.OS.OSEnvironment;
+import fr.rhaz.os.java.BiConsumer;
 import fr.rhaz.os.plugins.Plugin;
 import fr.rhaz.os.plugins.PluginDescription;
 
@@ -37,20 +37,25 @@ public class ConsoleService extends Service {
     @Override
     public void onCreate(){
         Intent iopen = new Intent(this, ConsoleActivity.class);
-        iopen.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP + Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        Action open = new Action(
+                R.drawable.ic_keyboard_black_24dp,
+                "Open",
+                activity(iopen)
+        );
 
         Intent istop = new Intent(this, NotificationReceiver.class);
         Action stop = new Action(
                 R.drawable.ic_clear_black_24dp,
                 "Stop",
-                pending(istop)
+                broadcast(istop)
         );
 
         note = new Builder(this)
                 .setSmallIcon(R.drawable.notification)
                 .setContentTitle("RHaz OS")
-                .setContentIntent(pending(iopen))
+                .setContentIntent(activity(iopen))
                 .setVisibility(Notification.VISIBILITY_SECRET)
+                .addAction(open)
                 .addAction(stop)
                 .build();
 
@@ -72,8 +77,12 @@ public class ConsoleService extends Service {
         return Service.START_NOT_STICKY;
     }
 
-    public PendingIntent pending(Intent intent){
+    public PendingIntent broadcast(Intent intent){
         return PendingIntent.getBroadcast(this, 0, intent, 0);
+    }
+
+    public PendingIntent activity(Intent intent){
+        return PendingIntent.getActivity(this, 0, intent, 0);
     }
 
     public void start() {
