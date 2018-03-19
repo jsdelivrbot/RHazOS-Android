@@ -65,13 +65,10 @@ public class Utils {
     public static Configuration loadConfig(Context context) {
         try {
             File folder = new File(Environment.getExternalStorageDirectory(), "RHazOS");
-            if (!folder.exists()) {
-                folder.mkdir();
-            }
+            folder.mkdirs();
             File file = new File(folder, "config.yml");
-            if (!file.exists()) {
+            if (!file.exists())
                 copyInputStreamToFile(context.getResources().openRawResource(R.raw.config), file);
-            }
             return ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
         } catch (IOException e) {
             Log.e("RHazOS", Log.getStackTraceString(e));

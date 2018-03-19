@@ -17,7 +17,7 @@ import android.util.Log;
 import java.io.File;
 
 import dalvik.system.DexClassLoader;
-import fr.rhaz.os.*;
+import fr.rhaz.os.OS;
 import fr.rhaz.os.OS.OSEnvironment;
 import fr.rhaz.os.java.BiConsumer;
 import fr.rhaz.os.plugins.Plugin;
@@ -36,11 +36,13 @@ public class ConsoleService extends Service {
 
     @Override
     public void onCreate(){
-        Intent iopen = new Intent(this, ConsoleActivity.class);
-        Action open = new Action(
+        Intent imenu = new Intent(this, Menu.class);
+
+        Intent iconsole = new Intent(this, ConsoleActivity.class);
+        Action console = new Action(
                 R.drawable.ic_keyboard_black_24dp,
                 "Open",
-                activity(iopen)
+                activity(iconsole)
         );
 
         Intent istop = new Intent(this, NotificationReceiver.class);
@@ -53,9 +55,9 @@ public class ConsoleService extends Service {
         note = new Builder(this)
                 .setSmallIcon(R.drawable.notification)
                 .setContentTitle("RHaz OS")
-                .setContentIntent(activity(iopen))
+                .setContentIntent(activity(imenu))
                 .setVisibility(Notification.VISIBILITY_SECRET)
-                .addAction(open)
+                .addAction(console)
                 .addAction(stop)
                 .build();
 
@@ -92,6 +94,13 @@ public class ConsoleService extends Service {
                 if (this.os.getThread().isAlive())
                     return;
 
+            File pfolder = new File(Environment.getExternalStorageDirectory(), "RHazOS/plugins");
+            pfolder.mkdirs();
+            pfolder.setWritable(true);
+
+            Log.w("RHazOS", "Created plugins dir");
+
+            Utils.loadConfig(this);
 
             this.os = new OS(OSEnvironment.ANDROID);
 
@@ -100,12 +109,13 @@ public class ConsoleService extends Service {
 
             BiConsumer<PluginDescription, String> loader = (desc, main) -> injectDexClass(desc, main);
 
-            os.getPluginManager().setFolder(new File(Environment.getExternalStorageDirectory(), "RHazOS/plugins"));
+            os.getPluginManager().setFolder(pfolder);
 
-
+            for(File file:os.getPluginManager().getAll())
+                Deodexer.deodex(pfolder, file);
 
             os.getPluginManager().loadAll(loader);
-            Log.w("RHazOS", "Loaded plugins");
+            Log.w("RHazOS", "Loaded all plugins");
 
             Thread.sleep(1000);
 
@@ -120,10 +130,10 @@ public class ConsoleService extends Service {
 
     public void injectDexClass(PluginDescription desc, String main){
         try {
-
             DexClassLoader loader = new DexClassLoader(desc.getFile().getPath(), getFilesDir().getPath(), null, this.getClassLoader());
             Class<? extends Plugin> pluginclass = Class.forName(main, true, loader).asSubclass(Plugin.class);
             desc.setPluginClass(pluginclass);
+            Log.w("RHazOS", "Loaded plugin "+desc.getName());
 
         } catch (Exception e) {
             e.printStackTrace();

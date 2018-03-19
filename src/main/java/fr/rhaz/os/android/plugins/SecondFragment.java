@@ -46,7 +46,6 @@ public class SecondFragment extends Fragment implements SwipeRefreshLayout.OnRef
         v = inflater.inflate(R.layout.second_layout, container, false);
         config = Utils.loadConfig(container.getContext());
         repositories = config.getStringList("repositories");
-        if(repositories.size() == 0) repositories.add("http://www.rhaz.fr/plugins.xml");
         list = (ListView) v.findViewById(R.id.listView);
         swipe = (SwipeRefreshLayout) v.findViewById(R.id.swipe);
         swipe.setOnRefreshListener(this);
