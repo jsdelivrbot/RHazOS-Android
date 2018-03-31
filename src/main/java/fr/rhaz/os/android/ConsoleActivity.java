@@ -9,8 +9,17 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ScrollView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -24,13 +33,19 @@ public class ConsoleActivity extends AppCompatActivity {
     private EditText inputView;
     private Timer timer;
     private Handler handler;
+    private int linecount;
+    private ScrollView scrollview;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_console);
 
-        textView = (EditText) findViewById(R.id.main);
-        textView.setMovementMethod(new ScrollingMovementMethod());
+        linecount = 0;
+
+        scrollview = (ScrollView) findViewById(R.id.scroll);
+
+        textView = (EditText) findViewById(R.id.text);
+        //textView.setMovementMethod(new ScrollingMovementMethod());
         textView.setFocusable(true);
         textView.setTextIsSelectable(true);
         textView.setOnKeyListener((v, keyCode, event) -> true);
@@ -59,17 +74,10 @@ public class ConsoleActivity extends AppCompatActivity {
         this.timer = new Timer();
         this.timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
-
-                handler.post(() -> {
-                    if (!textView.isFocused()) {
-                        updateLogs();
-                        if (textView.getScrollY() == textView.getBottom()) return;
-                        textView.requestFocus();
-                        textView.scrollTo(0, textView.getBottom());
-                        inputView.requestFocus();
-                    }
-                });
-
+            handler.post(() -> {
+                if (!textView.isFocused())
+                    updateLogs();
+            });
             }
         }, 0, 1000);
     }
@@ -91,7 +99,23 @@ public class ConsoleActivity extends AppCompatActivity {
 
     public void updateLogs() {
         if (!ready()) return;
-        this.textView.setText(service.getOutput().get());
+
+        // Max lines showed
+        if(textView.getLineCount() > 500) // If max lines is reached
+            textView.getEditableText().delete(0, 400); // Delete first 400 lines
+
+        List<String> logs = new ArrayList<>(service.getOutput().get());
+
+        // Max lines processed per second (100 lines per second)
+        List<String> diff;
+        if(logs.size() - linecount > 100) // If missing lines is over 100
+            diff = logs.subList(logs.size()-100, logs.size()); // Get 100 last lines
+        else diff = logs.subList(linecount, logs.size()); // Get all missing lines
+
+        for(String log:diff)
+            textView.append("\n" + log);
+
+        linecount = logs.size();
     }
 
     public boolean ready() {
@@ -119,4 +143,5 @@ public class ConsoleActivity extends AppCompatActivity {
     public Intent intent(Class<?> cls){
         return new Intent(this, cls);
     }
+
 }

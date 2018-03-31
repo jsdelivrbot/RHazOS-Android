@@ -4,4 +4,6 @@
         android:title="Configuration" />
     <item android:id="@+id/delete"
         android:title="Delete" />
+    <item android:id="@+id/share"
+        android:title="Share" />
 </menu>

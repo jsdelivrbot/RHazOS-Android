@@ -24,7 +24,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:label="@string/title_activity_console" android:name="fr.rhaz.os.android.ConsoleActivity">
+        <activity
+            android:windowSoftInputMode="adjustResize"
+            android:label="@string/title_activity_console"
+            android:name="fr.rhaz.os.android.ConsoleActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".Menu" />
         </activity>
         <activity android:label="@string/title_activity_plugins" android:name="fr.rhaz.os.android.plugins.PluginsActivity">

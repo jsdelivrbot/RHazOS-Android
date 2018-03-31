@@ -1,7 +1,11 @@
-# RHazOS
+# RHazOS for Android
 
 Android console with Java plugins
 
-Google Play: https://play.google.com/store/apps/details?id=fr.rhaz.os.android
+## Goto
 
-API: https://github.com/RHazDev/RHazOS
+* #### [GooglePlay](https://play.google.com/store/apps/details?id=fr.rhaz.os.android)
+
+* #### [RHazOS](https://github.com/RHazDev/RHazOS)
+
+* #### [TestPlugin](https://github.com/RHazDev/TestPlugin)

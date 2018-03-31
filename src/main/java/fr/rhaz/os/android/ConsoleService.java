@@ -18,14 +18,13 @@ import java.io.File;
 
 import dalvik.system.DexClassLoader;
 import fr.rhaz.os.OS;
-import fr.rhaz.os.OS.OSEnvironment;
 import fr.rhaz.os.java.BiConsumer;
 import fr.rhaz.os.plugins.Plugin;
 import fr.rhaz.os.plugins.PluginDescription;
 
 public class ConsoleService extends Service {
     private OS os;
-    private BigStringOutput output;
+    private ListStringOutput output;
     private Notification note;
 
     public class ConsoleBinder extends Binder {
@@ -63,7 +62,7 @@ public class ConsoleService extends Service {
 
         note.flags |= Notification.FLAG_NO_CLEAR;
 
-        this.output = new BigStringOutput();
+        this.output = new ListStringOutput();
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -102,9 +101,10 @@ public class ConsoleService extends Service {
 
             Utils.loadConfig(this);
 
-            this.os = new OS(OSEnvironment.ANDROID);
+            this.os = new OS(OS.Environment.ANDROID);
 
             os.getConsole().defaultStart();
+            os.getConsole().getLogger().getOutputs().clear();
             os.getConsole().getLogger().getOutputs().add(output);
 
             BiConsumer<PluginDescription, String> loader = (desc, main) -> injectDexClass(desc, main);
@@ -140,7 +140,7 @@ public class ConsoleService extends Service {
         }
     }
 
-    public BigStringOutput getOutput(){
+    public ListStringOutput getOutput(){
         return output;
     }
 
