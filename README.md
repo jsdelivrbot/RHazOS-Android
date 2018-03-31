@@ -1,4 +1,4 @@
-# RHazOS for Android v${project.version}
+# RHazOS for Android
 
 Android console with Java plugins
 
