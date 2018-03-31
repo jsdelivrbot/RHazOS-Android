@@ -1,6 +1,8 @@
-# RHazOS for Android
+# RHazOS for Android v${project.version}
 
 Android console with Java plugins
+
+Implementation of [RHazOS](https://github.com/RHazDev/RHazOS) for Android
 
 ## Goto
 
