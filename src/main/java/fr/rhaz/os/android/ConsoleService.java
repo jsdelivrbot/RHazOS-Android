@@ -15,10 +15,10 @@ import android.support.v7.app.NotificationCompat.Builder;
 import android.util.Log;
 
 import java.io.File;
+import java.util.function.BiConsumer;
 
 import dalvik.system.DexClassLoader;
 import fr.rhaz.os.OS;
-import fr.rhaz.os.java.BiConsumer;
 import fr.rhaz.os.plugins.Plugin;
 import fr.rhaz.os.plugins.PluginDescription;
 
@@ -112,7 +112,12 @@ public class ConsoleService extends Service {
             os.getPluginManager().setFolder(pfolder);
 
             for(File file:os.getPluginManager().getAll())
-                Deodexer.deodex(pfolder, file);
+                try {
+                    Deodexer.deodex(pfolder, file);
+                } catch (Exception e) {
+                    if(e.getMessage().equals("too big"))
+                    os.write("File "+file.getName()+" is too big, please dex it using a computer.");
+                }
 
             os.getPluginManager().loadAll(loader);
             Log.w("RHazOS", "Loaded all plugins");
@@ -135,9 +140,7 @@ public class ConsoleService extends Service {
             desc.setPluginClass(pluginclass);
             Log.w("RHazOS", "Loaded plugin "+desc.getName());
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) {}
     }
 
     public ListStringOutput getOutput(){
