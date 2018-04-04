@@ -19,6 +19,7 @@ import java.util.function.BiConsumer;
 
 import dalvik.system.DexClassLoader;
 import fr.rhaz.os.OS;
+import fr.rhaz.os.commands.users.Root;
 import fr.rhaz.os.plugins.Plugin;
 import fr.rhaz.os.plugins.PluginDescription;
 
@@ -93,7 +94,12 @@ public class ConsoleService extends Service {
                 if (this.os.getThread().isAlive())
                     return;
 
-            File pfolder = new File(Environment.getExternalStorageDirectory(), "RHazOS/plugins");
+            File folder = new File(Environment.getExternalStorageDirectory(), "RHazOS");
+            folder.mkdirs();
+            folder.setWritable(true);
+
+
+            File pfolder = new File(folder, "plugins");
             pfolder.mkdirs();
             pfolder.setWritable(true);
 
@@ -103,6 +109,8 @@ public class ConsoleService extends Service {
 
             this.os = new OS(OS.Environment.ANDROID);
 
+            os.setFolder(folder);
+            os.add(new Root(os));
             os.getConsole().defaultStart();
             os.getConsole().getLogger().getOutputs().clear();
             os.getConsole().getLogger().getOutputs().add(output);
