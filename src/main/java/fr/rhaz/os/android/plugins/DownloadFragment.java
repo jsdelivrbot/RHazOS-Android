@@ -50,7 +50,7 @@ public class DownloadFragment extends Fragment implements SwipeRefreshLayout.OnR
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.second_layout, container, false);
-        config = Utils.loadConfig(container.getContext());
+        config = Utils.INSTANCE.loadConfig(container.getContext());
         repositories = config.getStringList("repositories");
         list = (ListView) v.findViewById(R.id.listView);
         swipe = (SwipeRefreshLayout) v.findViewById(R.id.swipe);
@@ -213,6 +213,6 @@ public class DownloadFragment extends Fragment implements SwipeRefreshLayout.OnR
                 list.setOnItemClickListener(new ListListener(plugins, getActivity()));
                 swipe.setRefreshing(false);
             }
-        }.execute(Utils.toStringArray(repositories));
+        }.execute(Utils.INSTANCE.toStringArray(repositories));
     }
 }

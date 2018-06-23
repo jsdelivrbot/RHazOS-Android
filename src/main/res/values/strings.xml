@@ -5,4 +5,5 @@
     <string name="title_activity_plugins">Plugins</string>
     <string name="title_activity_about">About</string>
     <string name="console_service">RHazOS</string>
+    <string name="logo">Logo</string>
 </resources>
