@@ -16,6 +16,7 @@ import android.util.Log;
 
 import java.io.File;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import dalvik.system.DexClassLoader;
 import fr.rhaz.os.OS;
@@ -115,13 +116,13 @@ public class ConsoleService extends Service {
             os.getConsole().getLogger().getOutputs().clear();
             os.getConsole().getLogger().getOutputs().add(output);
 
-            BiConsumer<PluginDescription, String> loader = (desc, main) -> injectDexClass(desc, main);
+            Consumer<PluginDescription> loader = (desc) -> injectDexClass(desc);
 
             os.getPluginManager().setFolder(pfolder);
 
             for(File file:os.getPluginManager().getAll())
                 try {
-                    Deodexer.deodex(pfolder, file);
+                    Deodexer.INSTANCE.deodex(pfolder, file);
                 } catch (Exception e) {
                     if(e.getMessage().equals("too big"))
                     os.write("File "+file.getName()+" is too big, please dex it using a computer.");
@@ -141,10 +142,10 @@ public class ConsoleService extends Service {
         }
     }
 
-    public void injectDexClass(PluginDescription desc, String main){
+    public void injectDexClass(PluginDescription desc){
         try {
             DexClassLoader loader = new DexClassLoader(desc.getFile().getPath(), getFilesDir().getPath(), null, this.getClassLoader());
-            Class<? extends Plugin> pluginclass = Class.forName(main, true, loader).asSubclass(Plugin.class);
+            Class<? extends Plugin> pluginclass = Class.forName(desc.getPluginClassName(), true, loader).asSubclass(Plugin.class);
             desc.setPluginClass(pluginclass);
             Log.w("RHazOS", "Loaded plugin "+desc.getName());
 
